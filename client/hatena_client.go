@@ -17,7 +17,7 @@ const HatenaBaseURL = "http://b.hatena.ne.jp/hotentry/"
 type hatenaclient struct {
 	URL        string
 	HTTPClient *http.Client
-	config     *config.Hatena
+	Config     *config.Hatena
 }
 
 // NewHatenaClient initialize client struct
@@ -28,7 +28,7 @@ func NewHatenaClient(c *http.Client, config *config.Hatena) (*hatenaclient, erro
 		return nil, err
 	}
 
-	return &hatenaclient{URL: u, HTTPClient: c, config: config}, nil
+	return &hatenaclient{URL: u, HTTPClient: c, Config: config}, nil
 }
 
 func (c *hatenaclient) GetHotentryList() (*hatena.EntryList, error) {
@@ -43,7 +43,7 @@ func (c *hatenaclient) GetHotentryList() (*hatena.EntryList, error) {
 	}
 
 	selection := doc.Find("div.entrylist-contents")
-	el := parseSelectionToEntryList(selection, c.config.LowerLimit)
+	el := parseSelectionToEntryList(selection, c.Config.LowerLimit)
 	el.SortByBookmarkUser()
 
 	return el, nil

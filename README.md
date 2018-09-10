@@ -1,7 +1,7 @@
 # Golang sample cli project
 
 ## TODO
-- use package manager
+- Use package manager
 - Write test
 - Write document
-- build package
+- Build package
