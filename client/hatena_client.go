@@ -42,8 +42,15 @@ func (c *hatenaclient) GetHotentryList() (*hatena.EntryList, error) {
 		return nil, errors.New("document parse error")
 	}
 
-	i := 0
 	selection := doc.Find("div.entrylist-contents")
+	el := parseSelectionToEntryList(selection, c.config.LowerLimit)
+	el.SortByBookmarkUser()
+
+	return el, nil
+}
+
+func parseSelectionToEntryList(selection *goquery.Selection, ll int) *hatena.EntryList {
+	i := 0
 	el := make(hatena.EntryList, selection.Length())
 	selection.Each(func(index int, s *goquery.Selection) {
 		titleanker := s.Find("h3 > a")
@@ -52,12 +59,12 @@ func (c *hatenaclient) GetHotentryList() (*hatena.EntryList, error) {
 		titlelink, _ := titleanker.Attr("href")
 		fulltitle, _ := titleanker.Attr("title")
 
-		if count > c.config.LowerLimit {
+		if count > ll {
 			el[i] = hatena.Entry{fulltitle, count, titlelink}
 			i++
 		}
 	})
-	el = el[:i]
 
-	return &el, nil
+	el = el[:i]
+	return &el
 }

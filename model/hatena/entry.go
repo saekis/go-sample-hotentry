@@ -10,8 +10,6 @@ type Entry struct {
 	URL           string
 }
 
-type EntryList []Entry
-
 func (e *Entry) ToOutputLine() string {
-	return fmt.Sprintf("%du %s\n%s\n\n", e.Bookmarkcount, e.Fulltitle, e.URL)
+	return fmt.Sprintf("B!%d %s\n%s\n\n", e.Bookmarkcount, e.Fulltitle, e.URL)
 }
