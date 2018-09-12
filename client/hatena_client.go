@@ -4,20 +4,26 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
-	"strconv"
 
 	"github.com/saekis/go-sample-hotentry/config"
 	"github.com/saekis/go-sample-hotentry/model/hatena"
-
-	"github.com/PuerkitoBio/goquery"
 )
 
 const HatenaBaseURL = "http://b.hatena.ne.jp/hotentry/"
 
+type HTTPClient interface {
+	Get(string) (*http.Response, error)
+}
+
+type Parser interface {
+	parseResponseToEntryList(*http.Response, int) (*hatena.EntryList, error)
+}
+
 type hatenaclient struct {
 	URL        string
-	HTTPClient *http.Client
+	HTTPClient HTTPClient
 	Config     *config.Hatena
+	parser     Parser
 }
 
 // NewHatenaClient initialize client struct
@@ -28,7 +34,7 @@ func NewHatenaClient(c *http.Client, config *config.Hatena) (*hatenaclient, erro
 		return nil, err
 	}
 
-	return &hatenaclient{URL: u, HTTPClient: c, Config: config}, nil
+	return &hatenaclient{URL: u, HTTPClient: c, Config: config, parser: Responseparser{}}, nil
 }
 
 func (c *hatenaclient) GetHotentryList() (*hatena.EntryList, error) {
@@ -37,34 +43,11 @@ func (c *hatenaclient) GetHotentryList() (*hatena.EntryList, error) {
 		return nil, errors.New("http request error")
 	}
 
-	doc, err := goquery.NewDocumentFromResponse(res)
+	el, err := c.parser.parseResponseToEntryList(res, c.Config.LowerLimit)
 	if err != nil {
-		return nil, errors.New("document parse error")
+		return nil, errors.New("http response parse error")
 	}
-
-	selection := doc.Find("div.entrylist-contents")
-	el := parseSelectionToEntryList(selection, c.Config.LowerLimit)
 	el.SortByBookmarkUser()
 
 	return el, nil
-}
-
-func parseSelectionToEntryList(selection *goquery.Selection, ll int) *hatena.EntryList {
-	i := 0
-	el := make(hatena.EntryList, selection.Length())
-	selection.Each(func(index int, s *goquery.Selection) {
-		titleanker := s.Find("h3 > a")
-		usercount := s.Find(".entrylist-contents-users > a > span").Text()
-		count, _ := strconv.Atoi(usercount)
-		titlelink, _ := titleanker.Attr("href")
-		fulltitle, _ := titleanker.Attr("title")
-
-		if count > ll {
-			el[i] = hatena.Entry{fulltitle, count, titlelink}
-			i++
-		}
-	})
-
-	el = el[:i]
-	return &el
 }
