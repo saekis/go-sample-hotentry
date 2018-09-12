@@ -3,4 +3,5 @@
 ## TODO
 - Write test
 - Write document
+- CI
 - Build package
