@@ -15,35 +15,31 @@ type HTTPClient interface {
 	Get(string) (*http.Response, error)
 }
 
-type Parser interface {
-	parseResponseToEntryList(*http.Response, int) (*hatena.EntryList, error)
-}
-
-type hatenaclient struct {
+type Hatenaclient struct {
 	URL        string
 	HTTPClient HTTPClient
 	Config     *config.Hatena
-	parser     Parser
+	Parser     Parser
 }
 
 // NewHatenaClient initialize client struct
-func NewHatenaClient(c *http.Client, config *config.Hatena) (*hatenaclient, error) {
+func NewHatenaClient(c HTTPClient, config *config.Hatena, p Parser) (*Hatenaclient, error) {
 	u := HatenaBaseURL + config.Category
 	_, err := url.ParseRequestURI(u)
 	if err != nil {
 		return nil, err
 	}
 
-	return &hatenaclient{URL: u, HTTPClient: c, Config: config, parser: Responseparser{}}, nil
+	return &Hatenaclient{URL: u, HTTPClient: c, Config: config, Parser: p}, nil
 }
 
-func (c *hatenaclient) GetHotentryList() (*hatena.EntryList, error) {
+func (c *Hatenaclient) GetHotentryList() (*hatena.EntryList, error) {
 	res, err := c.HTTPClient.Get(c.URL)
 	if err != nil {
 		return nil, errors.New("http request error")
 	}
 
-	el, err := c.parser.parseResponseToEntryList(res, c.Config.LowerLimit)
+	el, err := c.Parser.ParseToEntryList(res, c.Config.LowerLimit)
 	if err != nil {
 		return nil, errors.New("http response parse error")
 	}

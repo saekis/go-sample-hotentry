@@ -31,7 +31,7 @@ func run() int {
 	}
 
 	o := &config.Hatena{LowerLimit: *lowerlimit, Category: *category}
-	c, err := client.NewHatenaClient(&http.Client{}, o)
+	c, err := client.NewHatenaClient(&http.Client{}, o, &client.Responseparser{})
 	if err != nil {
 		log.Fatal(errors.Wrap(err, "hatena client initialize error"))
 		return 1

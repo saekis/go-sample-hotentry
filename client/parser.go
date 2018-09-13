@@ -9,9 +9,13 @@ import (
 	"github.com/saekis/go-sample-hotentry/model/hatena"
 )
 
+type Parser interface {
+	ParseToEntryList(*http.Response, int) (*hatena.EntryList, error)
+}
+
 type Responseparser struct{}
 
-func (Responseparser) parseResponseToEntryList(res *http.Response, ll int) (*hatena.EntryList, error) {
+func (*Responseparser) ParseToEntryList(res *http.Response, ll int) (*hatena.EntryList, error) {
 	doc, err := goquery.NewDocumentFromResponse(res)
 	if err != nil {
 		return nil, errors.New("document parse error")
