@@ -1,0 +1,28 @@
+version: 2
+jobs:
+  build:
+    environment:
+      - GOPATH: /home/circleci/go
+    docker:
+      - image: circleci/golang:1.10
+    working_directory: /home/circleci/go/src/github.com/saekis/hotentry-cli
+    steps:
+      - run: echo 'export PATH=${GOPATH}/bin/:${PATH}' >> $BASH_ENV
+      - checkout
+      - run: go get -v -t -d ./...
+      - run: go get github.com/golang/lint/golint
+      - run: go get github.com/haya14busa/goverage
+      - run: golint ./...
+      - run: go vet ./...
+      - run: go test -v -race ./...
+      - run: goverage -coverprofile=./coverage.text ./...
+      - run: bash <(curl -s https://codecov.io/bash)
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: /.*/
