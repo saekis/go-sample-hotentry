@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/saekis/go-sample-hotentry/client"
-	"github.com/saekis/go-sample-hotentry/config"
-	"github.com/saekis/go-sample-hotentry/model/hatena"
+	"github.com/saekis/hotentry-cli/client"
+	"github.com/saekis/hotentry-cli/config"
+	"github.com/saekis/hotentry-cli/model/hatena"
 )
 
 type mockParser struct{}

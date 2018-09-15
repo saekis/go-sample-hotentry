@@ -3,7 +3,7 @@ package hatena_test
 import (
 	"testing"
 
-	"github.com/saekis/go-sample-hotentry/model/hatena"
+	"github.com/saekis/hotentry-cli/model/hatena"
 )
 
 func TestToOutputLine_Success(t *testing.T) {

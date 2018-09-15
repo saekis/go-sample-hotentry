@@ -3,7 +3,7 @@ package validator_test
 import (
 	"testing"
 
-	"github.com/saekis/go-sample-hotentry/validator"
+	"github.com/saekis/hotentry-cli/validator"
 )
 
 func TestValidate_success(t *testing.T) {

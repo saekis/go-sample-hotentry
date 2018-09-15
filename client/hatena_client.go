@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/saekis/go-sample-hotentry/config"
-	"github.com/saekis/go-sample-hotentry/model/hatena"
+	"github.com/saekis/hotentry-cli/config"
+	"github.com/saekis/hotentry-cli/model/hatena"
 )
 
 const HatenaBaseURL = "http://b.hatena.ne.jp/hotentry/"

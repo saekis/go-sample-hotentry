@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/saekis/go-sample-hotentry/client"
-	"github.com/saekis/go-sample-hotentry/config"
-	"github.com/saekis/go-sample-hotentry/validator"
+	"github.com/saekis/hotentry-cli/client"
+	"github.com/saekis/hotentry-cli/config"
+	"github.com/saekis/hotentry-cli/validator"
 
 	"github.com/pkg/errors"
 )

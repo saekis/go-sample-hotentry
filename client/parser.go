@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/saekis/go-sample-hotentry/model/hatena"
+	"github.com/saekis/hotentry-cli/model/hatena"
 )
 
 type Parser interface {
